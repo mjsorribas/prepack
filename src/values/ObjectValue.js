@@ -83,6 +83,7 @@ export default class ObjectValue extends ConcreteValue {
     this.symbols = new Map();
     this.refuseSerialization = refuseSerialization;
     this.$IsClassPrototype = false;
+    this.getHash();
   }
 
   static trackedPropertyNames = [
@@ -353,6 +354,7 @@ export default class ObjectValue extends ConcreteValue {
       if (!IsDataDescriptor(this.$Realm, desc)) return false;
       if (!desc.writable) return false;
     }
+    invariant(this.$Prototype !== undefined);
     if (this.$Prototype instanceof NullValue) return true;
     if (this.$Prototype === this.$Realm.intrinsics.ObjectPrototype) return true;
     return this.$Prototype.isSimpleObject();

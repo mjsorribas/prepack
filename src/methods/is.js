@@ -186,6 +186,7 @@ export function IsArray(realm: Realm, argument: Value): boolean {
   }
 
   // 4. Return false.
+  invariant(argument !== undefined);
   if (!argument.isSimpleObject()) argument.throwIfNotConcrete();
   return false;
 }

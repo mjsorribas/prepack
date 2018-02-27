@@ -1099,11 +1099,18 @@ export class Realm {
   // Restores each PropertyBinding in the given map to the value it
   // had when it was entered into the map and updates the map to record
   // the value the Binding had just before the call to this method.
+  counter = 0;
   restoreProperties(modifiedProperties: void | PropertyBindings) {
     if (modifiedProperties === undefined) return;
     modifiedProperties.forEach((desc, propertyBinding, m) => {
       let d = propertyBinding.descriptor;
       propertyBinding.descriptor = desc;
+      if ((propertyBinding.object: any).hashValue === 8659 && propertyBinding.key === "$Prototype") {
+        this.counter++;
+        if (this.counter === 34) {
+          d;
+        }
+      }
       m.set(propertyBinding, d);
     });
   }

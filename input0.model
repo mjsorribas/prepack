@@ -1,0 +1,135 @@
+__assumeDataProperty(this, "__DEV__", __abstract());
+__assumeDataProperty(this, "nativeLoggingHook", __abstract("function", "nativeLoggingHook"));
+__assumeDataProperty(this, "__inspectorLog", undefined);
+__assumeDataProperty(this, "originalConsole", undefined);
+__assumeDataProperty(this, "ErrorUtils", undefined);
+__assumeDataProperty(this, "nativeRequire", undefined);
+__assumeDataProperty(this, "GLOBAL", undefined);
+// Only used in dev mode. Still required to model since ComponentScript default buck mode defines __DEV__.
+__assumeDataProperty(this, "__accept", __abstract());
+__assumeDataProperty(this, "ComponentScriptBundle", __abstract());
+__assumeDataProperty(this, "Entrypoints", __abstract());
+__assumeDataProperty(this, "__fbRequireBatchedBridge", undefined);
+__assumeDataProperty(this, "__RCTProfileIsProfiling", __abstract());
+__assumeDataProperty(this, "__fbBatchedBridge", undefined);
+__assumeDataProperty(this, "__fbUninstallRNGlobalErrorHandler", undefined);
+__assumeDataProperty(this, "__fbDisableExceptionsManager", undefined);
+__assumeDataProperty(this, "__BUNDLE_START_TIME__", __abstract());
+__assumeDataProperty(this, "require", __abstract());
+__assumeDataProperty(this, "__d", __abstract());
+__assumeDataProperty(this, "define", __abstract());
+__assumeDataProperty(this, "babelHelpers", __abstract());
+__assumeDataProperty(this, "originalSetTimeout", __abstract());
+__assumeDataProperty(this, "originalSetInterval", __abstract());
+__assumeDataProperty(this, "originalSetImmediate", __abstract());
+__assumeDataProperty(this, "originalClearTimeout", __abstract());
+__assumeDataProperty(this, "originalClearInterval", __abstract());
+__assumeDataProperty(this, "originalClearImmediate", __abstract());
+__assumeDataProperty(this, "originalRequestAnimationFrame", __abstract());
+__assumeDataProperty(this, "originalCancelAnimationFrame", __abstract());
+__assumeDataProperty(this, "originalRequestIdleCallback", __abstract());
+__assumeDataProperty(this, "originalCancelIdleCallback", __abstract());
+__assumeDataProperty(this, "originalPromise", __abstract());
+__assumeDataProperty(this, "regeneratorRuntime", __abstract());
+__assumeDataProperty(this, "originalRegeneratorRuntime", __abstract());
+__assumeDataProperty(this, "originalXMLHttpRequest", __abstract());
+__assumeDataProperty(this, "originalFormData", __abstract());
+__assumeDataProperty(this, "fetch", __abstract());
+__assumeDataProperty(this, "fetchSegment", __abstract());
+__assumeDataProperty(this, "File", __abstract());
+__assumeDataProperty(this, "FileReader", __abstract());
+__assumeDataProperty(this, "URL", __abstract());
+__assumeDataProperty(this, "originalFetch", __abstract());
+__assumeDataProperty(this, "originalHeaders", __abstract());
+__assumeDataProperty(this, "originalRequest", __abstract());
+__assumeDataProperty(this, "originalResponse", __abstract());
+__assumeDataProperty(this, "originalWebSocket", __abstract());
+__assumeDataProperty(this, "originalMap", __abstract());
+__assumeDataProperty(this, "originalSet", __abstract());
+__assumeDataProperty(this, "__fbGenNativeModule", __abstract());
+__assumeDataProperty(this, "RCTTextView", __abstract());
+__assumeDataProperty(this, "RCTTextField", __abstract());
+__assumeDataProperty(this, "__REACT_DEVTOOLS_GLOBAL_HOOK__", __abstract());
+__assumeDataProperty(this, "self", __abstract());
+__assumeDataProperty(this, "__entrypoint", __abstract());
+__assumeDataProperty(this, "__INSTANTRENDERENTRYPOINT__", __abstract());
+__assumeDataProperty(this, "__INSTANTRENDER__", __abstract());
+__assumeDataProperty(this, "__SONAR_ENABLED", __abstract());
+__assumeDataProperty(this, "nativeTraceBeginSection", undefined); // at least for InstantRender; TODO: Check in general
+__assumeDataProperty(this, "nativeTraceEndSection", undefined); // at least for InstantRender; TODO: Check in general
+__assumeDataProperty(this, "__startThreadLocalTimer", undefined); // at least for InstantRender; TODO: Check in general
+__assumeDataProperty(this, "__stopThreadLocalTimer", undefined); // at least for InstantRender; TODO: Check in general
+
+// Platform/App Specific Globals
+__assumeDataProperty(this, 'Bundle-fb4a', undefined);;__assumeDataProperty(this, 'nativePerformanceNow', __abstract('function', 'nativePerformanceNow'));
+// End Platform/App Specific Globals
+var global = this;
+__assumeDataProperty(this, "nativeModuleProxy", __abstract({
+  UIManager: __abstract({
+    customBubblingEventTypes: __abstract(),
+    customDirectEventTypes: __abstract(),
+    AndroidLazyViewManagersEnabled: false,
+    __takeSnapshot: undefined,
+    takeSnapshot: undefined,
+  }),
+  DeviceEventManager: __abstract({}),
+  ExceptionsManager: __abstract({
+    reportFatalException: function(message, stack, id) {
+      console.log("nativeModuleProxy.ExceptionsManager.reportFatalException");
+      console.log(message);
+      for (var i = 0; i < stack.length; i++) {
+        var s = stack[i];
+        console.log("  at " + s.methodName + " (" + s.file + ":" + s.lineNumber + ":" + s.column + ")");
+      }
+    }
+  }),
+  PlatformConstants: __abstract({
+    isTesting: false,
+    Version: __abstract("number"),
+    forceTouchAvailable: undefined,
+  }),
+  MobileConfigModule: __abstract({}),
+  Analytics: __abstract({}),
+  I18n: __abstract({
+    localeCountryCode: __abstract(),
+    localeIdentifier: __abstract(),
+    fbLocaleIdentifier: __abstract(),
+  }),
+  I18nManager: __abstract({
+    isRTL: __abstract(),
+    allowRTL: __abstract(),
+    forceRTL: __abstract(),
+  }),
+  I18nAssets: __abstract({
+    assetsEnabled: __abstract(),
+  }),
+  // Platform/App Specific nativeModuleProxy properties
+  
+  // End Platform/App Specific nativeModuleProxy properties
+}, "global.nativeModuleProxy"));
+
+__assumeDataProperty(this, "nativeExtensions", __abstract({
+  DeviceInfo: __abstract({
+    Dimensions: __abstract({
+      window: undefined,
+      screen: undefined,
+      windowPhysicalPixels: __abstract({
+        width: __abstract("number"),
+        height: __abstract("number"),
+        scale: __abstract("number"),
+        fontScale: __abstract("number"),
+      }),
+      screenPhysicalPixels: __abstract({
+        width: __abstract("number"),
+        height: __abstract("number"),
+        scale: __abstract("number"),
+        fontScale: __abstract("number"),
+      }),
+    }),
+  }),
+  SourceCode: __abstract({
+    scriptURL: __abstract("string"),
+  }),
+}, "global.nativeExtensions"));
+
+__makePartial(this); // assume that all unknown properties are absent or simple data properties with unknown values

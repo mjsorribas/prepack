@@ -1,0 +1,1 @@
+prepack input0.model input1.js --debugNames --mathRandomSeed 0 --compatibility jsc-600-1-4-17 --inlineExpressions --srcmapIn "input2.map" --abstractEffectsInAdditionalFunctions
