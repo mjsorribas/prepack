@@ -10,6 +10,7 @@
 /* @flow */
 
 import type { Realm, ExecutionContext } from "../realm.js";
+import { ValuesDomain } from "../domains/index.js";
 import { FatalError } from "../errors.js";
 import type {
   DataBlock,
@@ -267,6 +268,7 @@ export default class ObjectValue extends ConcreteValue {
   properties: Map<string, PropertyBinding>;
   symbols: Map<SymbolValue, PropertyBinding>;
   unknownProperty: void | PropertyBinding;
+  temporalAlias: void | AbstractObjectValue;
 
   // An object value with an intrinsic name can either exist from the beginning of time,
   // or it can be associated with a particular point in time by being used as a template
@@ -280,6 +282,14 @@ export default class ObjectValue extends ConcreteValue {
   // ES2015 classes
   $IsClassPrototype: boolean;
 
+  // We track some internal state as properties on the global object, these should
+  // never be serialized.
+  refuseSerialization: boolean;
+
+  addtemporalAlias(temporalValue: AbstractObjectValue) {
+    this.temporalAlias = temporalValue;
+  }
+
   equals(x: Value): boolean {
     return x instanceof ObjectValue && this.getHash() === x.getHash();
   }
@@ -291,9 +301,9 @@ export default class ObjectValue extends ConcreteValue {
     return this.hashValue;
   }
 
-  // We track some internal state as properties on the global object, these should
-  // never be serialized.
-  refuseSerialization: boolean;
+  hasProperties(): boolean {
+    return this.properties.size > 0;
+  }
 
   mightBeFalse(): boolean {
     return false;
@@ -479,6 +489,21 @@ export default class ObjectValue extends ConcreteValue {
     });
     this.$Realm.callReportObjectGetOwnProperties(this);
     return keyArray;
+  }
+
+  getSnapshot(): AbstractObjectValue {
+    if (this.temporalAlias !== undefined) {
+      this.properties = new Map();
+      return this.temporalAlias;
+    }
+    let template = new ObjectValue(this.$Realm);
+    Object.assign(template, this);
+    delete template.hashValue;
+    this.properties = new Map();
+    let result = AbstractValue.createTemporalFromBuildFunction(this.$Realm, ObjectValue, [template], ([x]) => x);
+    invariant(result instanceof AbstractObjectValue);
+    result.values = new ValuesDomain(template);
+    return result;
   }
 
   _serialize(set: Function, stack: Map<Value, any>): any {

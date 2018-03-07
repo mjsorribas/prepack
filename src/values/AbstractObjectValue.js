@@ -40,6 +40,17 @@ export default class AbstractObjectValue extends AbstractValue {
   cachedIsSimpleObject: void | boolean;
   functionResultType: void | typeof Value;
 
+  addtemporalAlias(temporalValue: AbstractObjectValue) {
+    if (this.values.isTop()) {
+      AbstractValue.reportIntrospectionError(this);
+      throw new FatalError();
+    }
+    for (let element of this.values.getElements()) {
+      invariant(element instanceof ObjectValue);
+      element.addtemporalAlias(temporalValue);
+    }
+  }
+
   getTemplate(): ObjectValue {
     for (let element of this.values.getElements()) {
       invariant(element instanceof ObjectValue);
@@ -51,6 +62,16 @@ export default class AbstractObjectValue extends AbstractValue {
     }
     AbstractValue.reportIntrospectionError(this);
     throw new FatalError();
+  }
+
+  // Returns true if we know for sure that this object has (ordinary) properties
+  hasProperties(): boolean {
+    if (this.values.isTop()) return false;
+    for (let element of this.values.getElements()) {
+      invariant(element instanceof ObjectValue);
+      if (element.hasProperties()) return true;
+    }
+    return false;
   }
 
   isPartialObject(): boolean {
@@ -147,6 +168,24 @@ export default class AbstractObjectValue extends AbstractValue {
       }
     }
     this.cachedIsSimpleObject = true;
+  }
+
+  getSnapshot(): AbstractObjectValue {
+    if (this.isIntrinsic()) return this; // already temporal
+    if (this.values.isTop()) return this; // always the same
+    if (this.kind === "conditional") {
+      let [c, l, r] = this.args;
+      invariant(l instanceof ObjectValue || l instanceof AbstractObjectValue);
+      let ls = l.getSnapshot();
+      invariant(r instanceof ObjectValue || r instanceof AbstractObjectValue);
+      let rs = r.getSnapshot();
+      invariant(c instanceof AbstractValue);
+      let absVal = AbstractValue.createFromConditionalOp(this.$Realm, c, ls, rs, this.expressionLocation);
+      invariant(absVal instanceof AbstractObjectValue);
+      return absVal;
+    }
+    this.makeFinal();
+    return this;
   }
 
   makeFinal(): void {
